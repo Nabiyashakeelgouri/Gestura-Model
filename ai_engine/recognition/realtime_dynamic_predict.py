@@ -2,8 +2,8 @@ import cv2
 import torch
 import torch.nn as nn
 import time
-from preprocessing.landmark_extractor import extract_landmarks
-from recognition.dynamic_dataset import MAX_HANDS, HAND_POINTS, FACE_POINTS
+from ai_engine.preprocessing.landmark_extractor import extract_landmarks
+from ai_engine.recognition.dynamic_dataset import MAX_HANDS, HAND_POINTS, FACE_POINTS
 
 # -------- Label Map --------
 label_map = {'hello': 0, 'no': 1, 'stop': 2, 'thank_u': 3, 'yes': 4}

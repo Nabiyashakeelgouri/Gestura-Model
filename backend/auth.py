@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
+from backend.schemas import UserCreate
 
 from .database import SessionLocal
 from .models import User
@@ -31,18 +32,19 @@ def create_access_token(data: dict):
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 @router.post("/signup")
-def signup(username: str, email: str, password: str, db: Session = Depends(get_db)):
+def signup(user: UserCreate, db: Session = Depends(get_db)):
 
-    existing_user = db.query(User).filter(User.email == email).first()
+    existing_user = db.query(User).filter(User.email == user.email).first()
+
     if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        return {"message": "User already exists"}
 
-    hashed_password = pwd_context.hash(password)
+    hashed_password = pwd_context.hash(user.password)
 
     new_user = User(
-        username=username,
-        email=email,
-        password_hash=hashed_password
+        username=user.username,
+        email=user.email,
+        password=hashed_password
     )
 
     db.add(new_user)

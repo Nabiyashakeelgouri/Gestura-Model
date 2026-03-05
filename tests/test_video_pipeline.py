@@ -1,5 +1,5 @@
-from capture.camera import start_camera, read_frame, release_camera
-from preprocessing.landmark_extractor import extract_landmarks
+from ai_engine.capture.camera import start_camera, read_frame, release_camera
+from ai_engine.preprocessing.landmark_extractor import extract_landmarks
 import cv2
 import os
 import json

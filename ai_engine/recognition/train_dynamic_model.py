@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from dynamic_dataset import load_dynamic_dataset
+from ai_engine.recognition.dynamic_dataset import load_dynamic_dataset
 
 # Load data
 X, y, label_map = load_dynamic_dataset()

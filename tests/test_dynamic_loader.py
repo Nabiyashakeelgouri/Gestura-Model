@@ -1,4 +1,4 @@
-from recognition.dynamic_dataset import load_dynamic_dataset
+from ai_engine.recognition.dynamic_dataset import load_dynamic_dataset
 
 X, y, label_map = load_dynamic_dataset()
 
