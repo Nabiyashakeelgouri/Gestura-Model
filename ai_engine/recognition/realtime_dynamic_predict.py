@@ -1,7 +1,5 @@
-import cv2
 import torch
 import torch.nn as nn
-import time
 from ai_engine.preprocessing.landmark_extractor import extract_landmarks
 from ai_engine.recognition.dynamic_dataset import MAX_HANDS, HAND_POINTS, FACE_POINTS
 
@@ -26,55 +24,24 @@ class LSTMModel(nn.Module):
         out = self.fc(out)
         return out
 
+
 model = LSTMModel()
-model.load_state_dict(torch.load("recognition/dynamic_model.pth"))
+model.load_state_dict(torch.load("models/dynamic_model.pth", map_location=torch.device("cpu")))
 model.eval()
 
-# -------- Camera --------
-cap = cv2.VideoCapture(0)
+# -------- Sequence Buffer --------
+sequence_buffer = []
 
-sequence = []
-sentence = []
-last_prediction = None
+def predict_dynamic(frame):
 
-active = False
-activation_timer = None
-deactivation_timer = None
-
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
+    global sequence_buffer
 
     landmarks = extract_landmarks(frame)
 
-    # -------- Activation Logic --------
-    hands_detected = len(landmarks["hands"]) > 0
-
-    if hands_detected and not active:
-        if activation_timer is None:
-            activation_timer = time.time()
-        elif time.time() - activation_timer > 2:
-            active = True
-            print("Activated")
-    else:
-        activation_timer = None
-
-    if not hands_detected and active:
-        if deactivation_timer is None:
-            deactivation_timer = time.time()
-        elif time.time() - deactivation_timer > 2:
-            active = False
-            print("Deactivated")
-            sentence.clear()
-            last_prediction = None
-    else:
-        deactivation_timer = None
-
-    # -------- Feature Extraction --------
     frame_features = []
 
     hands = landmarks["hands"]
+
     for i in range(MAX_HANDS):
         if i < len(hands):
             for point in hands[i]:
@@ -88,31 +55,25 @@ while True:
     else:
         frame_features.extend([0.0] * FACE_POINTS * 3)
 
-    sequence.append(frame_features)
+    sequence_buffer.append(frame_features)
 
-    # -------- Prediction --------
-    if active and len(sequence) == 30:
-        input_tensor = torch.tensor([sequence], dtype=torch.float32)
-        output = model(input_tensor)
+    # Wait until we have 30 frames
+    if len(sequence_buffer) < 30:
+        return "..."
 
-        probabilities = torch.softmax(output, dim=1)
-        confidence = torch.max(probabilities).item()
-        predicted = torch.argmax(probabilities, dim=1).item()
+    input_tensor = torch.tensor([sequence_buffer], dtype=torch.float32)
 
-        if confidence > 0.60:
-            current_word = reverse_map[predicted]
+    output = model(input_tensor)
 
-            if last_prediction is None or current_word != last_prediction:
-                sentence.append(current_word)
-                print("Sentence:", " ".join(sentence))
-                last_prediction = current_word
+    probabilities = torch.softmax(output, dim=1)
 
-        sequence = []
+    confidence = torch.max(probabilities).item()
 
-    cv2.imshow("Dynamic Prediction", frame)
+    predicted = torch.argmax(probabilities, dim=1).item()
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    sequence_buffer = []
 
-cap.release()
-cv2.destroyAllWindows()
+    if confidence > 0.60:
+        return reverse_map[predicted]
+
+    return "..."
