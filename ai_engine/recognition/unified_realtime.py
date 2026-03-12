@@ -1,4 +1,4 @@
-import cv2
+﻿import cv2
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
@@ -10,7 +10,8 @@ import pygame
 from gtts import gTTS
 
 from ai_engine.preprocessing.landmark_extractor import extract_landmarks
-from ai_engine.recognition.dynamic_dataset import MAX_HANDS, HAND_POINTS, FACE_POINTS
+from ai_engine.recognition.dynamic_dataset import flatten_dynamic_frame
+from ai_engine.recognition.dynamic_model import DynamicGestureModel, load_dynamic_label_map
 from ai_engine.nlp.sentence_builder import correct_sentence
 
 
@@ -265,3 +266,5 @@ def predict_gesture():
 
     cap.release()
     cv2.destroyAllWindows()
+
+

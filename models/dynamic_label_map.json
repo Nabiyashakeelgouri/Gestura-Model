@@ -1,0 +1,10 @@
+{
+  "are_you": 0,
+  "hello": 1,
+  "how": 2,
+  "i_love_you": 3,
+  "no": 4,
+  "stop": 5,
+  "thank_u": 6,
+  "yes": 7
+}

@@ -1,1 +1,107 @@
-<link rel="stylesheet" href="static/style.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestura | Log In</title>
+    <link rel="stylesheet" href="static/auth.css" />
+</head>
+<body class="auth-page">
+    <div class="auth-shell">
+        <a class="home-link" href="index.html">Back to home</a>
+
+        <section class="auth-card">
+            <div class="auth-left">
+                <p class="auth-eyebrow">Gestura Access</p>
+                <h1>Welcome back</h1>
+                <p class="auth-hint">
+                    Enter your details and continue to your sign-language translation dashboard.
+                </p>
+
+                <form id="loginForm" class="auth-form" autocomplete="on">
+                    <label for="loginEmail">Email</label>
+                    <input id="loginEmail" name="email" type="email" autocomplete="username" autocapitalize="none" inputmode="email" required />
+
+                    <label for="loginPassword">Password</label>
+                    <input id="loginPassword" name="password" type="password" autocomplete="current-password" required minlength="6" />
+
+                    <button type="submit">Log In</button>
+                    <div id="loginMessage" class="form-message"></div>
+                </form>
+
+                <p class="switch-line">
+                    Account not created yet?
+                    <a href="signup.html">Try Signing up?</a>
+                </p>
+            </div>
+
+            <aside class="auth-right">
+                <p class="visual-caption">Real-time translation for inclusive communication.</p>
+                <div class="visual-scene" aria-hidden="true">
+                    <span class="beam beam-a"></span>
+                    <span class="beam beam-b"></span>
+                    <span class="beam beam-c"></span>
+                    <span class="cube cube-a"></span>
+                    <span class="cube cube-b"></span>
+                    <span class="cube cube-c"></span>
+                    <span class="cube cube-d"></span>
+                    <span class="dot dot-a"></span>
+                    <span class="dot dot-b"></span>
+                    <span class="dot dot-c"></span>
+                </div>
+            </aside>
+        </section>
+    </div>
+
+    <script src="static/script.js"></script>
+    <script>
+        const loginForm = document.getElementById("loginForm");
+        const loginMessage = document.getElementById("loginMessage");
+
+        if (window.Gestura.authToken()) {
+            window.location.href = "dashboard.html";
+        }
+
+        loginForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            loginMessage.textContent = "";
+            loginMessage.className = "form-message";
+
+            const payload = {
+                email: document.getElementById("loginEmail").value.trim(),
+                password: document.getElementById("loginPassword").value
+            };
+
+            try {
+                const response = await fetch(`${window.Gestura.apiBase()}/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok || !data.access_token) {
+                    loginMessage.className = "form-message error";
+                    if (response.status === 404) {
+                        loginMessage.innerHTML = `account does not exist. <a href="signup.html">sign up to continue</a>.`;
+                        return;
+                    }
+                    if (response.status === 401) {
+                        loginMessage.textContent = "wrong password or email.";
+                        return;
+                    }
+                    throw new Error(data.message || "Unable to log in.");
+                }
+
+                window.Gestura.setAuthToken(data.access_token);
+                window.location.href = "dashboard.html";
+            } catch (error) {
+                loginMessage.className = "form-message error";
+                loginMessage.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>
+
+

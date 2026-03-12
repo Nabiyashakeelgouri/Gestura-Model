@@ -1,8 +1,116 @@
-<link rel="stylesheet" href="static/style.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestura | Home</title>
+    <link rel="stylesheet" href="static/landing.css" />
+</head>
+<body class="landing-body">
+    <div class="ambient-bg"></div>
 
-<button onclick="startCamera()">Start Translation</button>
+    <header class="landing-header">
+        <a href="#main" class="brand">Gestura</a>
+        <nav class="main-nav">
+            <a href="#about-app">About</a>
+            <a href="#accuracy">Accuracy</a>
+            <a href="#why-us">Why Us</a>
+            <a href="#about-us">About Us</a>
+            <a class="ghost-btn" href="signup.html">Sign Up</a>
+            <a class="primary-btn" href="login.html">Log In</a>
+        </nav>
+    </header>
 
-<h2>Detected Gesture</h2>
-<p id="result">Waiting...</p>
+    <main class="landing-main">
+        <section id="main" class="hero-card">
+            <div class="hero-content">
+                <p class="eyebrow">AI-Powered Sign Language Translator</p>
+                <h1>Start translating now</h1>
+                <p class="hero-copy">
+                    Bridge communication gaps instantly with real-time sign recognition,
+                    text translation, and speech output in one accessible platform.
+                </p>
+                <div class="hero-actions">
+                    <a class="primary-btn" href="signup.html">Get Started</a>
+                    <a class="ghost-btn" href="#about-app">Learn more</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="static/images/hero-gesture.svg" alt="Gestura main product preview" />
+            </div>
+        </section>
 
-<script src="static/script.js"></script>
+        <section id="about-app" class="info-card">
+            <div class="info-text">
+                <h2>About the application</h2>
+                <p>
+                    Gestura captures hand and face landmarks from camera input, classifies
+                    signs with static and dynamic models, and produces readable text plus audio.
+                </p>
+                <p>
+                    It is designed for live communication support with a practical interface,
+                    low-latency frame processing, and clear feedback for users.
+                </p>
+            </div>
+            <div class="info-image">
+                <img src="static/images/about-app.svg" alt="Application pipeline diagram" />
+            </div>
+        </section>
+
+        <section id="accuracy" class="info-card reverse">
+            <div class="info-text">
+                <h2>Accuracy of the model</h2>
+                <p>
+                    The current MVP uses confidence thresholds and sequence-based prediction
+                    to improve stability in real-time usage.
+                </p>
+                <ul>
+                    <li>Static inference confidence threshold: <strong>0.65</strong></li>
+                    <li>Dynamic inference confidence threshold: <strong>0.45</strong></li>
+                    <li>Dynamic prediction sequence window: <strong>30 frames</strong></li>
+                </ul>
+            </div>
+            <div class="info-image">
+                <img src="static/images/accuracy.svg" alt="Model confidence and performance chart" />
+            </div>
+        </section>
+
+        <section id="why-us" class="info-card">
+            <div class="info-text">
+                <h2>Why choose Gestura</h2>
+                <ul>
+                    <li>Live and recorded translation flows in one product.</li>
+                    <li>Accessible output: text + speech for practical communication.</li>
+                    <li>Secure authenticated usage with account controls.</li>
+                    <li>Scalable architecture for future vocabulary expansion.</li>
+                </ul>
+            </div>
+            <div class="info-image">
+                <img src="static/images/why-us.svg" alt="Reasons to choose Gestura" />
+            </div>
+        </section>
+
+        <section id="about-us" class="info-card reverse">
+            <div class="info-text">
+                <h2>About us</h2>
+                <p>
+                    We are building Gestura with a focus on inclusive communication,
+                    practical AI deployment, and a user experience that works for everyday needs.
+                </p>
+                <p>
+                    Our goal is to make sign language translation approachable, reliable,
+                    and continuously improvable as the model grows.
+                </p>
+            </div>
+            <div class="info-image">
+                <img src="static/images/about-us.svg" alt="Team and mission illustration" />
+            </div>
+        </section>
+    </main>
+
+    <footer class="landing-footer">
+        <p>Gestura - Making communication more inclusive.</p>
+    </footer>
+</body>
+</html>
+

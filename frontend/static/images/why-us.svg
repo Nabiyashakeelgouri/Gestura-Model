@@ -1,0 +1,29 @@
+<svg width="900" height="560" viewBox="0 0 900 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgW" x1="40" y1="40" x2="760" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111C52"/>
+      <stop offset="1" stop-color="#0A1338"/>
+    </linearGradient>
+  </defs>
+  <rect x="28" y="28" width="844" height="504" rx="24" fill="url(#bgW)" stroke="#5A72CC" stroke-opacity="0.45"/>
+
+  <rect x="82" y="94" width="736" height="88" rx="18" fill="#0D1945" stroke="#657FD9" stroke-opacity="0.45"/>
+  <circle cx="132" cy="138" r="18" fill="#2ED8BA"/>
+  <path d="M123 138L131 146L145 130" stroke="#0A163E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="170" y="146" font-size="24" fill="#DAE8FF" font-family="Arial, sans-serif">Real-time + Record mode in one workflow</text>
+
+  <rect x="82" y="204" width="736" height="88" rx="18" fill="#0D1945" stroke="#657FD9" stroke-opacity="0.45"/>
+  <circle cx="132" cy="248" r="18" fill="#2ED8BA"/>
+  <path d="M123 248L131 256L145 240" stroke="#0A163E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="170" y="256" font-size="24" fill="#DAE8FF" font-family="Arial, sans-serif">Text and speech outputs for accessibility</text>
+
+  <rect x="82" y="314" width="736" height="88" rx="18" fill="#0D1945" stroke="#657FD9" stroke-opacity="0.45"/>
+  <circle cx="132" cy="358" r="18" fill="#2ED8BA"/>
+  <path d="M123 358L131 366L145 350" stroke="#0A163E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="170" y="366" font-size="24" fill="#DAE8FF" font-family="Arial, sans-serif">Secure accounts and scalable architecture</text>
+
+  <rect x="82" y="424" width="736" height="88" rx="18" fill="#0D1945" stroke="#657FD9" stroke-opacity="0.45"/>
+  <circle cx="132" cy="468" r="18" fill="#2ED8BA"/>
+  <path d="M123 468L131 476L145 460" stroke="#0A163E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="170" y="476" font-size="24" fill="#DAE8FF" font-family="Arial, sans-serif">Built for practical communication in daily life</text>
+</svg>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestura | Sign Up</title>
+    <link rel="stylesheet" href="static/auth.css" />
+</head>
+<body class="auth-page">
+    <div class="auth-shell">
+        <a class="home-link" href="index.html">Back to home</a>
+
+        <section class="auth-card">
+            <div class="auth-left">
+                <p class="auth-eyebrow">Gestura Access</p>
+                <h1>Create account</h1>
+                <p class="auth-hint">
+                    Start translating signs to text and speech in real time.
+                </p>
+
+                <form id="signupForm" class="auth-form" autocomplete="on">
+                    <label for="signupUsername">Username</label>
+                    <input id="signupUsername" name="username" autocomplete="username" autocapitalize="none" required minlength="3" />
+
+                    <label for="signupEmail">Email</label>
+                    <input id="signupEmail" name="email" type="email" autocomplete="email" autocapitalize="none" required />
+
+                    <label for="signupPassword">Password</label>
+                    <input id="signupPassword" name="password" type="password" autocomplete="new-password" required minlength="6" />
+
+                    <button type="submit">Create Account</button>
+                    <div id="signupMessage" class="form-message"></div>
+                </form>
+
+                <p class="switch-line">
+                    Already signed up?
+                    <a href="login.html">Log In</a>
+                </p>
+            </div>
+
+            <aside class="auth-right">
+                <p class="visual-caption">Your communication bridge starts here.</p>
+                <div class="visual-scene" aria-hidden="true">
+                    <span class="beam beam-a"></span>
+                    <span class="beam beam-b"></span>
+                    <span class="beam beam-c"></span>
+                    <span class="cube cube-a"></span>
+                    <span class="cube cube-b"></span>
+                    <span class="cube cube-c"></span>
+                    <span class="cube cube-d"></span>
+                    <span class="dot dot-a"></span>
+                    <span class="dot dot-b"></span>
+                    <span class="dot dot-c"></span>
+                </div>
+            </aside>
+        </section>
+    </div>
+
+    <script src="static/script.js"></script>
+    <script>
+        const signupForm = document.getElementById("signupForm");
+        const signupMessage = document.getElementById("signupMessage");
+
+        if (window.Gestura.authToken()) {
+            window.location.href = "dashboard.html";
+        }
+
+        signupForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            signupMessage.textContent = "";
+            signupMessage.className = "form-message";
+
+            const payload = {
+                username: document.getElementById("signupUsername").value.trim(),
+                email: document.getElementById("signupEmail").value.trim(),
+                password: document.getElementById("signupPassword").value
+            };
+
+            try {
+                const response = await fetch(`${window.Gestura.apiBase()}/auth/signup`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Unable to create account.");
+                }
+
+                signupMessage.className = "form-message ok";
+                signupMessage.textContent = "Account created. Redirecting to login...";
+                signupForm.reset();
+                window.location.href = "login.html";
+                return;
+            } catch (error) {
+                signupMessage.className = "form-message error";
+                signupMessage.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>
+
+

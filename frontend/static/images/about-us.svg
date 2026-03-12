@@ -1,0 +1,26 @@
+<svg width="900" height="560" viewBox="0 0 900 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgTeam" x1="40" y1="40" x2="760" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111C52"/>
+      <stop offset="1" stop-color="#0A1338"/>
+    </linearGradient>
+  </defs>
+  <rect x="28" y="28" width="844" height="504" rx="24" fill="url(#bgTeam)" stroke="#5A72CC" stroke-opacity="0.45"/>
+
+  <circle cx="210" cy="220" r="82" fill="#0E1A47" stroke="#718DE6" stroke-opacity="0.5"/>
+  <circle cx="450" cy="220" r="82" fill="#0E1A47" stroke="#718DE6" stroke-opacity="0.5"/>
+  <circle cx="690" cy="220" r="82" fill="#0E1A47" stroke="#718DE6" stroke-opacity="0.5"/>
+
+  <circle cx="210" cy="202" r="30" fill="#2ED8BA" fill-opacity="0.85"/>
+  <rect x="176" y="240" width="68" height="36" rx="18" fill="#2ED8BA" fill-opacity="0.7"/>
+
+  <circle cx="450" cy="202" r="30" fill="#4F7FFF" fill-opacity="0.85"/>
+  <rect x="416" y="240" width="68" height="36" rx="18" fill="#4F7FFF" fill-opacity="0.7"/>
+
+  <circle cx="690" cy="202" r="30" fill="#54D2FF" fill-opacity="0.85"/>
+  <rect x="656" y="240" width="68" height="36" rx="18" fill="#54D2FF" fill-opacity="0.7"/>
+
+  <rect x="130" y="352" width="640" height="124" rx="22" fill="#0E1A47" stroke="#6A84E5" stroke-opacity="0.45"/>
+  <text x="168" y="400" font-size="28" fill="#D9E8FF" font-family="Arial, sans-serif">Inclusive AI for communication</text>
+  <text x="168" y="438" font-size="22" fill="#ABC2F1" font-family="Arial, sans-serif">Built with accessibility, usability, and trust in mind.</text>
+</svg>

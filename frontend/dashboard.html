@@ -1,184 +1,813 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<title>Gestura Dashboard</title>
-
-<style>
-
-body{
-    margin:0;
-    font-family:Arial;
-    background:#0f172a;
-    color:white;
-}
-
-header{
-    background:#1e293b;
-    padding:20px;
-    text-align:center;
-    font-size:28px;
-}
-
-.container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:40px;
-    margin-top:40px;
-}
-
-.camera-box{
-    background:#1e293b;
-    padding:20px;
-    border-radius:10px;
-}
-
-video{
-    border-radius:10px;
-    background:black;
-}
-
-.controls{
-    text-align:center;
-    margin-top:15px;
-}
-
-button{
-    padding:10px 18px;
-    font-size:16px;
-    margin:5px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-}
-
-.start{background:#22c55e;color:white;}
-.detect{background:#3b82f6;color:white;}
-.stop{background:#ef4444;color:white;}
-
-.output-box{
-    background:#1e293b;
-    padding:30px;
-    border-radius:10px;
-    width:300px;
-}
-
-.word{
-    font-size:28px;
-    color:#22c55e;
-}
-
-.sentence{
-    font-size:22px;
-    margin-top:15px;
-}
-
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestura | Dashboard</title>
+    <link rel="stylesheet" href="static/dashboard.css" />
 </head>
+<body class="dash-body">
+    <header class="dash-header">
+        <div class="brand-block">
+            <h1>Gestura - AI Sign Language Translator</h1>
+            <p>Real-time and recorded translation workspace</p>
+        </div>
+
+        <div class="settings-wrap" id="settingsWrap">
+            <button class="settings-btn" id="settingsBtn" aria-label="Open settings menu">&#9881;</button>
+            <div class="settings-menu" id="settingsMenu">
+                <p class="settings-user" id="settingsUser">User</p>
+                <button id="logoutBtn" class="menu-btn">Logout</button>
+                <button id="deleteAccountBtn" class="menu-btn danger">Delete Account</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="dash-stage">
+        <article class="video-panel">
+            <video id="camera" autoplay playsinline muted></video>
+            <div id="handBox" class="hand-box hidden"></div>
+            <div id="debugOverlay" class="debug-overlay">bbox: -</div>
+            <div id="subtitleOverlay" class="subtitle-overlay">Subtitles will appear here.</div>
+            <div id="sessionTimer" class="session-timer">00:00</div>
+        </article>
+
+        <aside class="side-panel">
+            <article class="settings-card">
+                <h2>Settings</h2>
+                <div class="settings-tabs">
+                    <button id="audioTabBtn" class="tab-btn active">Audio</button>
+                    <button id="videoTabBtn" class="tab-btn">Video</button>
+                </div>
+
+                <div id="audioSettingsPanel" class="settings-panel">
+                    <label class="inline-toggle">
+                        <input type="checkbox" id="audioEnabled" checked />
+                        Enable audio
+                    </label>
+                    <label for="volumeRange">Volume: <span id="volumeValue">80%</span></label>
+                    <input id="volumeRange" type="range" min="0" max="100" value="80" />
+                    <button id="playAudioBtn" class="btn secondary">Play Audio</button>
+                    <audio id="audioPlayer" controls></audio>
+                </div>
+
+                <div id="videoSettingsPanel" class="settings-panel hidden">
+                    <label for="fontSizeRange">Font size: <span id="fontSizeValue">24px</span></label>
+                    <input id="fontSizeRange" type="range" min="16" max="42" value="24" />
+
+                    <label for="subtitleColor">Text color</label>
+                    <select id="subtitleColor">
+                        <option value="#ffffff">White</option>
+                        <option value="#000000">Black</option>
+                        <option value="#ff4d4f">Red</option>
+                        <option value="#2ecc71">Green</option>
+                        <option value="#2f80ff">Blue</option>
+                        <option value="#f5c542">Yellow</option>
+                        <option value="#c86bff">Purple</option>
+                    </select>
+
+                    <label for="subtitleBgColor">Background color</label>
+                    <select id="subtitleBgColor">
+                        <option value="#000000cc">Black</option>
+                        <option value="#ffffffcc">White</option>
+                        <option value="#1d3557cc">Navy</option>
+                        <option value="#2d6a4fcc">Green</option>
+                        <option value="#8a1538cc">Maroon</option>
+                        <option value="#6d597acc">Violet</option>
+                        <option value="#b5651dcc">Orange</option>
+                    </select>
+                </div>
+            </article>
+
+            <article class="output-panel">
+                <h3 class="output-title">Output</h3>
+                <div class="output-two">
+                    <div class="output-box">
+                        <p class="output-label">Prediction</p>
+                        <p id="predictionValue" class="output-value">-</p>
+                    </div>
+                    <div class="output-box">
+                        <p class="output-label">Confidence</p>
+                        <p id="confidenceValue" class="output-value">-</p>
+                    </div>
+                </div>
+                <div class="output-box output-sentence">
+                    <p class="output-label">Sentence</p>
+                    <p id="sentenceValue" class="output-value">-</p>
+                    <div class="output-actions">
+                        <button id="clearSentenceBtn" class="btn secondary">Clear Sentence</button>
+                    </div>
+                </div>
+            </article>
+        </aside>
+    </section>
+
+    <footer class="control-bar">
+        <div class="control-left">
+            <button id="startCameraBtn" class="btn">Start Camera</button>
+        </div>
+
+        <div class="control-center">
+            <div id="modeChoiceWrap" class="mode-choice">
+                <button id="liveModeBtn" class="mode-btn">Live Translation</button>
+                <button id="recordModeBtn" class="mode-btn">Record</button>
+            </div>
+
+            <div id="actionCenter" class="action-center hidden">
+                <span id="selectedModeBadge" class="mode-badge">Mode: Live</span>
+                <button id="actionBtn" class="btn accent" disabled>Start Translation</button>
+                <button id="changeModeBtn" class="btn secondary">Change Mode</button>
+                <div id="recognitionChoiceWrap" class="recognition-choice">
+                    <span class="recognition-label">Recognition:</span>
+                    <button id="hybridRecognitionBtn" class="recognition-btn active">Hybrid</button>
+                    <button id="staticRecognitionBtn" class="recognition-btn">Static</button>
+                    <button id="dynamicRecognitionBtn" class="recognition-btn">Dynamic</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-right">
+            <p class="status-line">Status: <span id="statusValue" class="status-value">standby</span></p>
+            <div id="activityMessage" class="message"></div>
+        </div>
+    </footer>
+
+    <script src="static/script.js"></script>
+    <script>
+        const camera = document.getElementById("camera");
+        const subtitleOverlay = document.getElementById("subtitleOverlay");
+        const sessionTimer = document.getElementById("sessionTimer");
+        const activityMessage = document.getElementById("activityMessage");
+        const handBox = document.getElementById("handBox");
+        const debugOverlay = document.getElementById("debugOverlay");
+
+        const startCameraBtn = document.getElementById("startCameraBtn");
+        const liveModeBtn = document.getElementById("liveModeBtn");
+        const recordModeBtn = document.getElementById("recordModeBtn");
+        const modeChoiceWrap = document.getElementById("modeChoiceWrap");
+        const actionCenter = document.getElementById("actionCenter");
+        const selectedModeBadge = document.getElementById("selectedModeBadge");
+        const actionBtn = document.getElementById("actionBtn");
+        const changeModeBtn = document.getElementById("changeModeBtn");
+
+        const statusValue = document.getElementById("statusValue");
+        const predictionValue = document.getElementById("predictionValue");
+        const confidenceValue = document.getElementById("confidenceValue");
+        const sentenceValue = document.getElementById("sentenceValue");
+        const clearSentenceBtn = document.getElementById("clearSentenceBtn");
+
+        const settingsWrap = document.getElementById("settingsWrap");
+        const settingsBtn = document.getElementById("settingsBtn");
+        const settingsUser = document.getElementById("settingsUser");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+
+        const audioTabBtn = document.getElementById("audioTabBtn");
+        const videoTabBtn = document.getElementById("videoTabBtn");
+        const audioSettingsPanel = document.getElementById("audioSettingsPanel");
+        const videoSettingsPanel = document.getElementById("videoSettingsPanel");
+
+        const audioPlayer = document.getElementById("audioPlayer");
+        const audioEnabled = document.getElementById("audioEnabled");
+        const volumeRange = document.getElementById("volumeRange");
+        const volumeValue = document.getElementById("volumeValue");
+        const playAudioBtn = document.getElementById("playAudioBtn");
+
+        const fontSizeRange = document.getElementById("fontSizeRange");
+        const fontSizeValue = document.getElementById("fontSizeValue");
+        const subtitleColor = document.getElementById("subtitleColor");
+        const subtitleBgColor = document.getElementById("subtitleBgColor");
+
+        if (!window.Gestura.authToken()) {
+            window.location.href = "login.html";
+        }
+
+        let stream = null;
+        let selectedMode = null;
+        let recognitionMode = "hybrid";
+        let liveRunning = false;
+        let recording = false;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let frameLoopHandle = null;
+        let previewLoopHandle = null;
+        let latestAudioUrl = "";
+        let smoothBBox = null;
+        let lastBoxTimestamp = 0;
+
+        let sessionSeconds = 0;
+        let sessionTimerHandle = null;
+
+        const sessionId = (window.crypto && window.crypto.randomUUID)
+            ? window.crypto.randomUUID()
+            : `session-${Date.now()}`;
+
+        function setMessage(text, tone = "") {
+            activityMessage.className = `message ${tone}`.trim();
+            activityMessage.textContent = text;
+        }
+
+        function formatTime(seconds) {
+            const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
+            const secs = String(seconds % 60).padStart(2, "0");
+            return `${mins}:${secs}`;
+        }
+
+        function updateTimerDisplay() {
+            sessionTimer.textContent = formatTime(sessionSeconds);
+        }
+
+        function startSessionTimer() {
+            stopSessionTimer();
+            sessionSeconds = 0;
+            updateTimerDisplay();
+
+            sessionTimerHandle = setInterval(() => {
+                sessionSeconds += 1;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopSessionTimer() {
+            if (sessionTimerHandle) {
+                clearInterval(sessionTimerHandle);
+                sessionTimerHandle = null;
+            }
+        }
+
+        function updateSubtitleStyle() {
+            const size = `${fontSizeRange.value}px`;
+            subtitleOverlay.style.fontSize = size;
+            subtitleOverlay.style.color = subtitleColor.value;
+            subtitleOverlay.style.background = subtitleBgColor.value;
+            fontSizeValue.textContent = size;
+        }
+
+        function updateSubtitleText(text) {
+            subtitleOverlay.textContent = text && text.trim() ? text : "Subtitles will appear here.";
+        }
+
+        function clearSentence() {
+            sentenceValue.textContent = "-";
+            updateSubtitleText("");
+            latestAudioUrl = "";
+            audioPlayer.removeAttribute("src");
+            audioPlayer.load();
+        }
+
+        function setOutput(data, options = {}) {
+            const includeStatus = options.includeStatus !== false;
+            const includeAudio = options.includeAudio !== false;
+
+            if (includeStatus) {
+                statusValue.textContent = data.status || "standby";
+            }
+            predictionValue.textContent = data.prediction || "-";
+            confidenceValue.textContent = typeof data.confidence === "number"
+                ? data.confidence.toFixed(3)
+                : "-";
+            sentenceValue.textContent = data.sentence || "-";
+            updateSubtitleText(data.sentence || data.prediction || "");
+            updateHandBox(data.hand_bbox || null, data.hand_detected);
+
+            if (data.errors && data.errors.length > 0) {
+                setMessage(data.errors[0], "error");
+            }
+
+            if (includeAudio && data.audio_url) {
+                latestAudioUrl = `${window.Gestura.apiBase()}${data.audio_url}`;
+                audioPlayer.src = latestAudioUrl;
+                if (audioEnabled.checked) {
+                    audioPlayer.play().catch(() => {});
+                }
+            }
+        }
+
+        function stopPreviewLoop() {
+            if (previewLoopHandle) {
+                clearTimeout(previewLoopHandle);
+                previewLoopHandle = null;
+            }
+        }
+        async function sendRecordingPreviewFrame() {
+            if (!recording || !stream) return;
+
+            const canvas = document.createElement("canvas");
+            canvas.width = camera.videoWidth || 640;
+            canvas.height = camera.videoHeight || 480;
+            const context = canvas.getContext("2d");
+            context.drawImage(camera, 0, 0, canvas.width, canvas.height);
+            const image = canvas.toDataURL("image/jpeg", 0.8);
+
+            try {
+                const response = await fetch(`${window.Gestura.apiBase()}/inference/frame`, {
+                    method: "POST",
+                    headers: { ...window.Gestura.authHeaders(), "Content-Type": "application/json" },
+                    body: JSON.stringify({ image, session_id: `preview-${sessionId}` })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (response.ok) {
+                    setOutput(data, { includeStatus: false, includeAudio: false });
+                }
+            } catch (_error) {
+                // Preview is best-effort while recording; ignore transient failures.
+            }
+
+            previewLoopHandle = setTimeout(sendRecordingPreviewFrame, 450);
+        }
 
 
-<body>
+        function mapBBoxToVideoPanel(box) {
+            if (!box || !Array.isArray(box) || box.length !== 4) return null;
 
-<header>
-Gestura AI Sign Language Translator
-</header>
+            const [x1n, y1n, x2n, y2n] = box.map(Number);
+            if (![x1n, y1n, x2n, y2n].every(Number.isFinite)) return null;
+            if (x2n <= x1n || y2n <= y1n) return null;
+
+            const vw = camera.videoWidth || 0;
+            const vh = camera.videoHeight || 0;
+            const cw = camera.clientWidth || 0;
+            const ch = camera.clientHeight || 0;
+            if (!vw || !vh || !cw || !ch) return null;
+
+            const videoAspect = vw / vh;
+            const containerAspect = cw / ch;
+
+            let renderedW;
+            let renderedH;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            if (videoAspect > containerAspect) {
+                renderedH = ch;
+                renderedW = ch * videoAspect;
+                offsetX = (cw - renderedW) / 2;
+            } else {
+                renderedW = cw;
+                renderedH = cw / videoAspect;
+                offsetY = (ch - renderedH) / 2;
+            }
+
+            const left = offsetX + x1n * renderedW;
+            const top = offsetY + y1n * renderedH;
+            const right = offsetX + x2n * renderedW;
+            const bottom = offsetY + y2n * renderedH;
+
+            return {
+                left: Math.max(0, Math.min(cw, left)),
+                top: Math.max(0, Math.min(ch, top)),
+                width: Math.max(0, Math.min(cw, right) - Math.max(0, Math.min(cw, left))),
+                height: Math.max(0, Math.min(ch, bottom) - Math.max(0, Math.min(ch, top)))
+            };
+        }
+
+        function updateHandBox(box, handDetected = null) {
+            const mapped = mapBBoxToVideoPanel(box);
+            if (!mapped || mapped.width < 8 || mapped.height < 8) {
+                const ageMs = Date.now() - lastBoxTimestamp;
+                if (ageMs > 900) {
+                    handBox.classList.add("hidden");
+                    smoothBBox = null;
+                }
+                debugOverlay.textContent = `hand_detected=${handDetected ?? "-"} raw_bbox=${JSON.stringify(box)}`;
+                return;
+            }
+            lastBoxTimestamp = Date.now();
+
+            if (!smoothBBox) {
+                smoothBBox = { ...mapped };
+            } else {
+                const alpha = 0.35;
+                smoothBBox.left = smoothBBox.left * (1 - alpha) + mapped.left * alpha;
+                smoothBBox.top = smoothBBox.top * (1 - alpha) + mapped.top * alpha;
+                smoothBBox.width = smoothBBox.width * (1 - alpha) + mapped.width * alpha;
+                smoothBBox.height = smoothBBox.height * (1 - alpha) + mapped.height * alpha;
+            }
+
+            handBox.style.left = `${smoothBBox.left}px`;
+            handBox.style.top = `${smoothBBox.top}px`;
+            handBox.style.width = `${smoothBBox.width}px`;
+            handBox.style.height = `${smoothBBox.height}px`;
+            handBox.classList.remove("hidden");
+            debugOverlay.textContent = `hand_detected=${handDetected ?? "-"} raw_bbox=${JSON.stringify(box)}`;
+        }
+
+        function setSettingsTab(tabName) {
+            const audioActive = tabName === "audio";
+            audioTabBtn.classList.toggle("active", audioActive);
+            videoTabBtn.classList.toggle("active", !audioActive);
+            audioSettingsPanel.classList.toggle("hidden", !audioActive);
+            videoSettingsPanel.classList.toggle("hidden", audioActive);
+        }
+
+        function setRecognitionMode(mode) {
+            recognitionMode = mode;
+            hybridRecognitionBtn.classList.toggle("active", mode === "hybrid");
+            staticRecognitionBtn.classList.toggle("active", mode === "static");
+            dynamicRecognitionBtn.classList.toggle("active", mode === "dynamic");
+
+            const modeTitle = mode === "dynamic" ? "Dynamic" : mode === "static" ? "Static" : "Hybrid";
+            setMessage(`Recognition mode: ${modeTitle}.`, "ok");
+        }
+
+        function updateModeUI() {
+            const modeActive = liveRunning || recording;
+            const modeSelected = !!selectedMode;
+
+            modeChoiceWrap.classList.toggle("hidden", modeSelected);
+            actionCenter.classList.toggle("hidden", !modeSelected);
+
+            if (selectedMode === "live") {
+                selectedModeBadge.textContent = "Mode: Live Translation";
+                actionBtn.textContent = liveRunning ? "End Translation" : "Start Translation";
+            } else if (selectedMode === "record") {
+                selectedModeBadge.textContent = "Mode: Record";
+                actionBtn.textContent = recording ? "End Recording" : "Start Recording";
+            } else {
+                selectedModeBadge.textContent = "Mode: -";
+                actionBtn.textContent = "Start Translation";
+            }
+
+            actionBtn.disabled = !stream || !modeSelected;
+            changeModeBtn.classList.toggle("hidden", modeActive);
+        }
+
+        async function syncMode(mode) {
+            try {
+                await fetch(`${window.Gestura.apiBase()}/mode`, {
+                    method: "POST",
+                    headers: window.Gestura.authHeaders({ "Content-Type": "application/json" }),
+                    body: JSON.stringify({ mode })
+                });
+            } catch (_error) {
+                // mode sync is optional for UX continuity
+            }
+        }
+
+        async function selectMode(mode, sync = true) {
+            if (liveRunning || recording) {
+                setMessage("Stop the current session before changing mode.", "error");
+                return;
+            }
+
+            selectedMode = mode;
+            updateModeUI();
+            setMessage(`Mode selected: ${mode === "live" ? "Live Translation" : "Record"}.`, "ok");
+
+            if (sync) {
+                await syncMode(mode);
+            }
+        }
+
+        function resetModeSelection() {
+            if (liveRunning || recording) {
+                return;
+            }
+            selectedMode = null;
+            updateModeUI();
+            setMessage("Choose Live Translation or Record to continue.", "");
+        }
+
+        async function startCamera() {
+            if (stream) return;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                camera.srcObject = stream;
+                updateModeUI();
+                setMessage("Camera started.", "ok");
+            } catch (_error) {
+                setMessage("Unable to access camera.", "error");
+            }
+        }
+
+        function stopCamera() {
+            if (!stream) return;
+            stream.getTracks().forEach((track) => track.stop());
+            stream = null;
+            camera.srcObject = null;
+            updateModeUI();
+        }
+        async function sendLiveFrame() {
+            if (!liveRunning || !stream) return;
+
+            const canvas = document.createElement("canvas");
+            canvas.width = camera.videoWidth || 640;
+            canvas.height = camera.videoHeight || 480;
+            const context = canvas.getContext("2d");
+            context.drawImage(camera, 0, 0, canvas.width, canvas.height);
+            const image = canvas.toDataURL("image/jpeg", 0.8);
+
+            try {
+                const response = await fetch(`${window.Gestura.apiBase()}/inference/frame`, {
+                    method: "POST",
+                    headers: window.Gestura.authHeaders({ "Content-Type": "application/json" }),
+                    body: JSON.stringify({ image, session_id: sessionId, recognition_mode: recognitionMode })
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (response.status === 401) {
+                    window.Gestura.clearAuthToken();
+                    window.location.href = "login.html";
+                    return;
+                }
+                if (!response.ok) {
+                    throw new Error(data.message || "Live translation failed.");
+                }
+
+                setOutput(data);
+            } catch (error) {
+                setMessage(error.message, "error");
+                stopLiveTranslation();
+                return;
+            }
+
+            const loopMs = recognitionMode === "dynamic" ? 90 : recognitionMode === "hybrid" ? 140 : 220;
+            frameLoopHandle = setTimeout(sendLiveFrame, loopMs);
+        }
 
 
-<div class="container">
+        async function startLiveTranslation() {
+            await startCamera();
+            if (!stream || liveRunning) return;
 
-<div class="camera-box">
+            liveRunning = true;
+            startSessionTimer();
+            updateModeUI();
+            setMessage("Live translation started.", "ok");
+            sendLiveFrame();
+        }
 
-<video id="camera" width="500" height="350" autoplay playsinline></video>
+        function stopLiveTranslation() {
+            liveRunning = false;
+            if (frameLoopHandle) {
+                clearTimeout(frameLoopHandle);
+                frameLoopHandle = null;
+            }
+            stopPreviewLoop();
+            updateHandBox(null);
+            stopSessionTimer();
+            updateModeUI();
+            statusValue.textContent = "standby";
+            setMessage("Live translation stopped.", "");
+        }
 
-<div class="controls">
-<button class="start" onclick="startCamera()">Start Camera</button>
-<button class="detect" onclick="startDetection()">Start Detection</button>
-<button class="stop" onclick="stopDetection()">Stop</button>
-</div>
+        function buildRecorderFromStream(mediaStream) {
+            const preferredTypes = [
+                "video/webm;codecs=vp9",
+                "video/webm;codecs=vp8",
+                "video/webm"
+            ];
 
-</div>
+            for (const type of preferredTypes) {
+                if (window.MediaRecorder.isTypeSupported(type)) {
+                    return new MediaRecorder(mediaStream, { mimeType: type });
+                }
+            }
 
+            return new MediaRecorder(mediaStream);
+        }
 
-<div class="output-box">
+        async function uploadRecordedVideo(blob) {
+            const formData = new FormData();
+            formData.append("file", blob, "recording.webm");
 
-<div class="word" id="word">Word: -</div>
+            statusValue.textContent = "processing";
+            setMessage("Uploading recording for translation...", "");
 
-<div class="sentence" id="sentence">Sentence: -</div>
+            try {
+                const response = await fetch(`${window.Gestura.apiBase()}/inference/video`, {
+                    method: "POST",
+                    headers: window.Gestura.authHeaders(),
+                    body: formData
+                });
+                const data = await response.json().catch(() => ({}));
 
-</div>
+                if (response.status === 401) {
+                    window.Gestura.clearAuthToken();
+                    window.location.href = "login.html";
+                    return;
+                }
+                if (!response.ok) {
+                    throw new Error(data.message || "Record processing failed.");
+                }
 
-</div>
+                setOutput(data);
+                setMessage("Recording processed successfully.", "ok");
+            } catch (error) {
+                setMessage(error.message, "error");
+            }
+        }
+        async function startRecording() {
+            await startCamera();
+            if (!stream || recording) return;
+            if (!window.MediaRecorder) {
+                setMessage("Recording is not supported in this browser.", "error");
+                return;
+            }
 
+            recordedChunks = [];
+            mediaRecorder = buildRecorderFromStream(stream);
 
-<script>
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
 
-let running = false
-const video = document.getElementById("camera")
+            mediaRecorder.onstop = async () => {
+                const mimeType = recordedChunks[0]?.type || "video/webm";
+                const blob = new Blob(recordedChunks, { type: mimeType });
+                if (!blob.size) {
+                    setMessage("No recording captured. Try again.", "error");
+                    return;
+                }
+                await uploadRecordedVideo(blob);
+            };
 
-async function startCamera(){
+            mediaRecorder.start();
+            recording = true;
+            startSessionTimer();
+            updateModeUI();
+            statusValue.textContent = "recording";
+            setMessage("Recording started.", "ok");
+            sendRecordingPreviewFrame();
+        }
 
-    try{
+        function stopRecording() {
+            if (!recording) return;
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video:true,
-            audio:false
-        })
+            recording = false;
+            stopPreviewLoop();
+            updateHandBox(null);
+            stopSessionTimer();
+            updateModeUI();
+            statusValue.textContent = "processing";
 
-        video.srcObject = stream
+            if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+            }
 
-    }
-    catch(err){
+            setMessage("Recording stopped.", "");
+        }
 
-        alert("Camera access denied or unavailable")
+        async function runAction() {
+            if (!selectedMode) {
+                setMessage("Choose Live Translation or Record first.", "error");
+                return;
+            }
 
-    }
+            if (selectedMode === "live") {
+                if (liveRunning) {
+                    stopLiveTranslation();
+                } else {
+                    await startLiveTranslation();
+                }
+                return;
+            }
 
-}
+            if (recording) {
+                stopRecording();
+            } else {
+                await startRecording();
+            }
+        }
 
-async function detect(){
+        async function fetchProfileAndMode() {
+            try {
+                const [profileRes, modeRes] = await Promise.all([
+                    fetch(`${window.Gestura.apiBase()}/auth/profile`, {
+                        headers: window.Gestura.authHeaders()
+                    }),
+                    fetch(`${window.Gestura.apiBase()}/mode`, {
+                        headers: window.Gestura.authHeaders()
+                    })
+                ]);
 
-    if(!running) return
+                if (profileRes.status === 401 || modeRes.status === 401) {
+                    window.Gestura.clearAuthToken();
+                    window.location.href = "login.html";
+                    return;
+                }
 
-    try{
+                const profile = await profileRes.json();
+                settingsUser.textContent = profile.username || profile.email || "User";
+            } catch (_error) {
+                setMessage("Unable to reach backend.", "error");
+            }
+        }
 
-        const response = await fetch("http://127.0.0.1:8000/predict-dynamic")
+        async function logout() {
+            try {
+                await fetch(`${window.Gestura.apiBase()}/auth/logout`, {
+                    method: "POST",
+                    headers: window.Gestura.authHeaders()
+                });
+            } catch (_error) {
+                // ignore network errors on logout
+            }
 
-        const data = await response.json()
+            if (liveRunning) stopLiveTranslation();
+            if (recording) stopRecording();
+            stopCamera();
 
-        document.getElementById("word").innerText =
-        "Word: " + data.word
+            window.Gestura.clearAuthToken();
+            window.location.href = "login.html";
+        }
 
-        document.getElementById("sentence").innerText =
-        "Sentence: " + data.sentence
+        async function deleteAccount() {
+            const confirmed = window.confirm("Delete account permanently? All the data will be deleted.");
+            if (!confirmed) return;
 
-    }
-    catch(error){
+            try {
+                const response = await fetch(`${window.Gestura.apiBase()}/user/delete`, {
+                    method: "POST",
+                    headers: window.Gestura.authHeaders()
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.message || "Delete request failed.");
 
-        console.log("Backend error")
+                window.Gestura.clearAuthToken();
+                window.location.href = "signup.html";
+            } catch (error) {
+                setMessage(error.message, "error");
+            }
+        }
 
-    }
+        settingsBtn.addEventListener("click", (event) => {
+            event.stopPropagation();
+            settingsWrap.classList.toggle("open");
+        });
 
-    setTimeout(detect,1500)
+        document.addEventListener("click", (event) => {
+            if (!settingsWrap.contains(event.target)) {
+                settingsWrap.classList.remove("open");
+            }
+        });
 
-}
+        startCameraBtn.addEventListener("click", startCamera);
+        liveModeBtn.addEventListener("click", () => selectMode("live"));
+        recordModeBtn.addEventListener("click", () => selectMode("record"));
+        actionBtn.addEventListener("click", runAction);
+        changeModeBtn.addEventListener("click", resetModeSelection);
+        hybridRecognitionBtn.addEventListener("click", () => setRecognitionMode("hybrid"));
+        staticRecognitionBtn.addEventListener("click", () => setRecognitionMode("static"));
+        dynamicRecognitionBtn.addEventListener("click", () => setRecognitionMode("dynamic"));
+        clearSentenceBtn.addEventListener("click", clearSentence);
+        logoutBtn.addEventListener("click", logout);
+        deleteAccountBtn.addEventListener("click", deleteAccount);
 
-function startDetection(){
+        audioTabBtn.addEventListener("click", () => setSettingsTab("audio"));
+        videoTabBtn.addEventListener("click", () => setSettingsTab("video"));
 
-    running = true
-    detect()
+        audioEnabled.addEventListener("change", () => {
+            if (!audioEnabled.checked) {
+                audioPlayer.pause();
+            }
+        });
 
-}
+        volumeRange.addEventListener("input", () => {
+            const value = Number(volumeRange.value);
+            audioPlayer.volume = value / 100;
+            volumeValue.textContent = `${value}%`;
+        });
 
-function stopDetection(){
+        playAudioBtn.addEventListener("click", async () => {
+            if (!audioEnabled.checked) {
+                setMessage("Enable audio first to play sound.", "error");
+                return;
+            }
+            if (!latestAudioUrl) {
+                setMessage("No audio output yet.", "error");
+                return;
+            }
+            audioPlayer.src = latestAudioUrl;
+            try {
+                await audioPlayer.play();
+            } catch (_error) {
+                setMessage("Audio autoplay is blocked by browser. Click play on player.", "error");
+            }
+        });
 
-    running = false
+        fontSizeRange.addEventListener("input", updateSubtitleStyle);
+        subtitleColor.addEventListener("change", updateSubtitleStyle);
+        subtitleBgColor.addEventListener("change", updateSubtitleStyle);
 
-}
+        window.addEventListener("beforeunload", () => {
+            if (liveRunning) stopLiveTranslation();
+            if (recording) stopRecording();
+            stopCamera();
+        });
 
-</script>
-
-
+        audioPlayer.volume = Number(volumeRange.value) / 100;
+        updateTimerDisplay();
+        updateSubtitleStyle();
+        setSettingsTab("audio");
+        updateModeUI();
+        fetchProfileAndMode();
+    </script>
 </body>
 </html>
+
+
+
+

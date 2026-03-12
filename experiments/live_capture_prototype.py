@@ -4,6 +4,7 @@ import time
 import numpy as np
 import mediapipe as mp
 import json
+import os
 from collections import deque
 
 # Mediapipe utilities
@@ -15,7 +16,9 @@ mp_styles = mp.solutions.drawing_styles
 # Parameters
 SAVE_LANDMARKS = True   # set False to disable saving sequences
 SEQ_LEN = 30            # frames per recorded sequence
-OUTPUT_SEQ_DIR = "recorded_sequences"  # will be created
+GESTURE_LABEL = os.getenv("GESTURE_LABEL", "hello")
+OUTPUT_SEQ_DIR = os.path.join("recorded_sequences", GESTURE_LABEL)  # will be created
+REQUIRE_HAND_FOR_RECORDING = True
 
 # prepare webcam
 cap = cv2.VideoCapture(0)
@@ -29,6 +32,10 @@ prev = 0
 recording = False
 seq_buffer = deque(maxlen=SEQ_LEN)
 seq_count = 0
+if SAVE_LANDMARKS:
+    os.makedirs(OUTPUT_SEQ_DIR, exist_ok=True)
+    existing = [f for f in os.listdir(OUTPUT_SEQ_DIR) if f.lower().endswith(".json")]
+    seq_count = len(existing)
 
 # init mediapipe
 with mp_hands.Hands(static_image_mode=False,
@@ -95,20 +102,39 @@ with mp_hands.Hands(static_image_mode=False,
         # if recording, collect landmarks (both hands & face coords)
         if SAVE_LANDMARKS and recording:
             frame_landmarks = {"hands": [], "face": []}
+            hand_points = []
             if hand_res.multi_hand_landmarks:
                 for h in hand_res.multi_hand_landmarks:
                     coords = [(lm.x, lm.y, lm.z) for lm in h.landmark]
-                    frame_landmarks["hands"].append(coords)
+                    hand_points.append(coords)
+
+            # Keep a stable left->right-like order across frames to reduce
+            # sequence noise in downstream dynamic training.
+            hand_points.sort(key=lambda hand: sum(point[0] for point in hand) / max(len(hand), 1))
+            frame_landmarks["hands"] = hand_points
+
             if face_res.multi_face_landmarks:
                 for f in face_res.multi_face_landmarks:
                     coords = [(lm.x, lm.y, lm.z) for lm in f.landmark]
                     frame_landmarks["face"].append(coords)
-            seq_buffer.append(frame_landmarks)
+
+            if (not REQUIRE_HAND_FOR_RECORDING) or frame_landmarks["hands"]:
+                seq_buffer.append(frame_landmarks)
+            else:
+                cv2.putText(
+                    out_frame,
+                    "Show your hand to record",
+                    (10, 90),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.8,
+                    (0, 0, 255),
+                    2,
+                )
+
             cv2.putText(out_frame, f"Recording: {len(seq_buffer)}/{SEQ_LEN}", (10,60), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,0,255), 2)
 
             if len(seq_buffer) == SEQ_LEN:
                 # save sequence to disk
-                import os
                 os.makedirs(OUTPUT_SEQ_DIR, exist_ok=True)
                 seq_path = os.path.join(OUTPUT_SEQ_DIR, f"seq_{seq_count}.json")
                 with open (seq_path, "w") as f:
@@ -125,7 +151,6 @@ with mp_hands.Hands(static_image_mode=False,
             break
         elif key == ord('s'):
             # save snapshot
-            import os
             os.makedirs("snapshots", exist_ok=True)
             ts = int(time.time())
             cv2.imwrite(f"snapshots/snap_{ts}.png", out_frame)

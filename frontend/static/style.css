@@ -1,0 +1,183 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(145deg, #0b1622, #101f2d 40%, #0f1a29);
+    color: #e5eef7;
+    min-height: 100vh;
+}
+
+a {
+    color: #5fc4ff;
+}
+
+.page-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.panel {
+    background: rgba(16, 29, 43, 0.92);
+    border: 1px solid rgba(95, 196, 255, 0.25);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.panel h1,
+.panel h2,
+.panel h3 {
+    margin-top: 0;
+}
+
+.grid-two {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+label {
+    font-size: 14px;
+    color: #9fb6cb;
+}
+
+input,
+select,
+button,
+textarea {
+    border-radius: 8px;
+    border: 1px solid rgba(159, 182, 203, 0.35);
+    background: #0f2333;
+    color: #e5eef7;
+    padding: 10px;
+    font-size: 14px;
+}
+
+button {
+    cursor: pointer;
+    border-color: rgba(95, 196, 255, 0.6);
+    background: linear-gradient(120deg, #145579, #1973a3);
+}
+
+button.secondary {
+    background: #21384d;
+    border-color: rgba(159, 182, 203, 0.45);
+}
+
+button.danger {
+    background: #7a1f2a;
+    border-color: #d66775;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.hint {
+    font-size: 13px;
+    color: #9fb6cb;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #5fc4ff;
+    font-size: 12px;
+    letter-spacing: 0.2px;
+}
+
+.status-standby {
+    border-color: #8ba6bb;
+    color: #8ba6bb;
+}
+
+.status-analyzing {
+    border-color: #4de28a;
+    color: #4de28a;
+}
+
+.status-cooldown {
+    border-color: #f1b55f;
+    color: #f1b55f;
+}
+
+.video-box {
+    width: 100%;
+    max-width: 640px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #050b10;
+    border: 1px solid rgba(159, 182, 203, 0.3);
+}
+
+video {
+    width: 100%;
+    display: block;
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.metric {
+    background: rgba(10, 23, 34, 0.95);
+    border: 1px solid rgba(159, 182, 203, 0.25);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.metric-title {
+    font-size: 12px;
+    color: #9fb6cb;
+    margin-bottom: 4px;
+}
+
+.metric-value {
+    font-size: 18px;
+    color: #f2f8ff;
+    word-break: break-word;
+}
+
+.message {
+    min-height: 20px;
+    font-size: 14px;
+}
+
+.ok {
+    color: #7df0b3;
+}
+
+.error {
+    color: #ff8f9b;
+}
+
+@media (max-width: 860px) {
+    .grid-two {
+        grid-template-columns: 1fr;
+    }
+
+    .metrics {
+        grid-template-columns: 1fr;
+    }
+}

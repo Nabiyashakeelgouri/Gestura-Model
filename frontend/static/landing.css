@@ -1,0 +1,230 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700&display=swap");
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.landing-body {
+    font-family: "Space Grotesk", "Sora", "Trebuchet MS", sans-serif;
+    color: #eef4ff;
+    background:
+        radial-gradient(circle at 18% 12%, rgba(65, 121, 255, 0.22), transparent 48%),
+        radial-gradient(circle at 82% 20%, rgba(27, 222, 170, 0.18), transparent 45%),
+        linear-gradient(145deg, #060814 0%, #0a1030 55%, #080b17 100%);
+    min-height: 100vh;
+}
+
+.ambient-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 54px 54px;
+    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.85), transparent 88%);
+    z-index: 0;
+}
+
+.landing-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 5.5vw;
+    backdrop-filter: blur(14px);
+    background: rgba(5, 9, 25, 0.68);
+    border-bottom: 1px solid rgba(98, 123, 255, 0.22);
+}
+
+.brand {
+    text-decoration: none;
+    color: #f5f8ff;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #d6e4ff;
+    font-size: 0.95rem;
+}
+
+.primary-btn,
+.ghost-btn {
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #4d7dff, #29d4b3);
+    color: #f9fcff;
+    box-shadow: 0 8px 24px rgba(56, 114, 255, 0.35);
+}
+
+.ghost-btn {
+    border-color: rgba(126, 161, 255, 0.45);
+    background: rgba(70, 92, 176, 0.2);
+    color: #d6e4ff;
+}
+
+.primary-btn:hover,
+.ghost-btn:hover {
+    transform: translateY(-1px);
+}
+
+.landing-main {
+    position: relative;
+    z-index: 1;
+    width: min(1160px, 92vw);
+    margin: 32px auto 70px;
+    display: grid;
+    gap: 26px;
+}
+
+.hero-card,
+.info-card {
+    border: 1px solid rgba(114, 151, 255, 0.28);
+    border-radius: 24px;
+    background: linear-gradient(160deg, rgba(12, 20, 49, 0.92), rgba(9, 14, 36, 0.87));
+    box-shadow: 0 22px 50px rgba(2, 5, 18, 0.4);
+}
+
+.hero-card {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 22px;
+    padding: 34px;
+    align-items: center;
+}
+
+.hero-content h1 {
+    font-size: clamp(2rem, 4.8vw, 3.3rem);
+    line-height: 1.1;
+    margin: 8px 0 12px;
+    font-family: "Sora", "Space Grotesk", sans-serif;
+}
+
+.eyebrow {
+    display: inline-block;
+    margin: 0;
+    border: 1px solid rgba(136, 170, 255, 0.45);
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-size: 0.8rem;
+    color: #bdd4ff;
+    background: rgba(46, 76, 182, 0.22);
+}
+
+.hero-copy {
+    color: #d2ddf6;
+    max-width: 560px;
+    font-size: 1.03rem;
+    line-height: 1.65;
+}
+
+.hero-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.hero-visual img {
+    width: 100%;
+    border-radius: 18px;
+    border: 1px solid rgba(123, 153, 255, 0.38);
+    background: rgba(8, 14, 35, 0.9);
+}
+
+.info-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    align-items: center;
+    padding: 26px;
+}
+
+.info-card.reverse .info-text {
+    order: 2;
+}
+
+.info-card.reverse .info-image {
+    order: 1;
+}
+
+.info-text h2 {
+    margin: 0 0 12px;
+    font-family: "Sora", "Space Grotesk", sans-serif;
+    font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.info-text p,
+.info-text li {
+    color: #d2ddf6;
+    line-height: 1.65;
+    font-size: 1rem;
+}
+
+.info-text ul {
+    margin: 12px 0 0 18px;
+    padding: 0;
+}
+
+.info-image img {
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid rgba(126, 158, 255, 0.34);
+    background: rgba(8, 14, 35, 0.88);
+}
+
+.landing-footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 6px 0 30px;
+    color: #9eb2dd;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 920px) {
+    .hero-card,
+    .info-card {
+        grid-template-columns: 1fr;
+    }
+
+    .info-card.reverse .info-text,
+    .info-card.reverse .info-image {
+        order: initial;
+    }
+
+    .landing-main {
+        width: min(1100px, 94vw);
+    }
+
+    .landing-header {
+        padding: 16px 4vw;
+    }
+}

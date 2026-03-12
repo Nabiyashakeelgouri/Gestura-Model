@@ -1,27 +1,38 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from backend.database import SessionLocal
-from backend.models import User
 
-router = APIRouter()
+from backend.auth import get_current_user, get_db
+from backend.models import AccountDeletionToken, User
+from backend.schemas import DeleteRequestResponse
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.delete("/user/delete")
-def delete_user(username: str, db: Session = Depends(get_db)):
-
-    user = db.query(User).filter(User.username == username).first()
-
-    if not user:
-        return {"message": "User not found"}
-
+def _delete_user_now(user: User, db: Session) -> DeleteRequestResponse:
+    db.query(AccountDeletionToken).filter(
+        AccountDeletionToken.user_id == user.id
+    ).delete(synchronize_session=False)
     db.delete(user)
     db.commit()
 
-    return {"message": "User deleted successfully"}
+    return DeleteRequestResponse(
+        status="deleted",
+        message="Your account has been deleted successfully.",
+    )
+
+
+@router.post("/delete", response_model=DeleteRequestResponse)
+def delete_account(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> DeleteRequestResponse:
+    return _delete_user_now(current_user, db)
+
+
+# Backward-compatible alias for older frontend calls.
+@router.post("/delete/request", response_model=DeleteRequestResponse)
+def request_account_deletion(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> DeleteRequestResponse:
+    return _delete_user_now(current_user, db)

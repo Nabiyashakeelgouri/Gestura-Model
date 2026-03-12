@@ -1,0 +1,33 @@
+<svg width="900" height="560" viewBox="0 0 900 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgAcc" x1="60" y1="40" x2="760" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111C52"/>
+      <stop offset="1" stop-color="#0A1338"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="86" y1="0" x2="400" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4F7FFF"/>
+      <stop offset="1" stop-color="#2ED8BA"/>
+    </linearGradient>
+  </defs>
+  <rect x="28" y="28" width="844" height="504" rx="24" fill="url(#bgAcc)" stroke="#5A72CC" stroke-opacity="0.45"/>
+
+  <text x="78" y="106" font-size="30" fill="#E4EEFF" font-family="Arial, sans-serif">Model Stability Indicators</text>
+
+  <rect x="80" y="146" width="740" height="2" fill="#4A5FAD" fill-opacity="0.6"/>
+
+  <text x="82" y="214" font-size="22" fill="#C9DBFF" font-family="Arial, sans-serif">Static threshold (0.65)</text>
+  <rect x="82" y="228" width="520" height="24" rx="12" fill="#141E4A"/>
+  <rect x="82" y="228" width="430" height="24" rx="12" fill="url(#bar)"/>
+
+  <text x="82" y="304" font-size="22" fill="#C9DBFF" font-family="Arial, sans-serif">Dynamic threshold (0.45)</text>
+  <rect x="82" y="318" width="520" height="24" rx="12" fill="#141E4A"/>
+  <rect x="82" y="318" width="338" height="24" rx="12" fill="url(#bar)"/>
+
+  <text x="82" y="392" font-size="22" fill="#C9DBFF" font-family="Arial, sans-serif">Sequence window (30 frames)</text>
+  <rect x="82" y="406" width="520" height="24" rx="12" fill="#141E4A"/>
+  <rect x="82" y="406" width="468" height="24" rx="12" fill="url(#bar)"/>
+
+  <circle cx="700" cy="282" r="92" fill="#0D1945" stroke="#6A84E5" stroke-opacity="0.5"/>
+  <text x="665" y="272" font-size="24" fill="#BFD4FF" font-family="Arial, sans-serif">LIVE</text>
+  <text x="628" y="305" font-size="24" fill="#2ED8BA" font-family="Arial, sans-serif">CONFIDENCE</text>
+</svg>

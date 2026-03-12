@@ -1,0 +1,314 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Sora:wght@400;600;700&display=swap");
+
+:root {
+    --bg-main: #07111f;
+    --bg-card: rgba(7, 10, 20, 0.92);
+    --bg-left: linear-gradient(160deg, rgba(9, 14, 29, 0.98), rgba(7, 12, 23, 0.95));
+    --line: rgba(119, 151, 232, 0.34);
+    --text-main: #ecf2ff;
+    --text-dim: #9fb0d3;
+    --accent: #5f7dff;
+    --accent-strong: #445fed;
+    --danger: #ff8da2;
+    --ok: #8ee6bb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.auth-page {
+    min-height: 100vh;
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    color: var(--text-main);
+    background:
+        radial-gradient(circle at 14% 16%, rgba(94, 125, 255, 0.28), transparent 44%),
+        radial-gradient(circle at 85% 10%, rgba(33, 177, 255, 0.2), transparent 38%),
+        radial-gradient(circle at 80% 78%, rgba(39, 84, 189, 0.2), transparent 41%),
+        linear-gradient(145deg, #0a1527 0%, #08101f 55%, #070d18 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 22px;
+}
+
+.auth-shell {
+    width: min(1080px, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.home-link {
+    align-self: flex-start;
+    text-decoration: none;
+    color: #d6e1ff;
+    font-size: 0.94rem;
+    border: 1px solid rgba(128, 157, 232, 0.4);
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: rgba(39, 59, 108, 0.25);
+}
+
+.auth-card {
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--bg-card);
+    box-shadow: 0 24px 64px rgba(2, 6, 18, 0.62);
+    display: grid;
+    grid-template-columns: minmax(320px, 430px) 1fr;
+    min-height: 620px;
+}
+
+.auth-left {
+    background: var(--bg-left);
+    border-right: 1px solid rgba(112, 138, 220, 0.25);
+    padding: 42px 34px 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-eyebrow {
+    display: inline-flex;
+    align-self: flex-start;
+    margin: 0;
+    padding: 6px 11px;
+    border-radius: 999px;
+    border: 1px solid rgba(123, 157, 246, 0.45);
+    color: #bed0fb;
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    background: rgba(74, 109, 224, 0.2);
+}
+
+.auth-left h1 {
+    margin: 14px 0 8px;
+    font-family: "Sora", "Manrope", sans-serif;
+    font-size: clamp(2rem, 2.4vw, 2.3rem);
+    line-height: 1.15;
+}
+
+.auth-hint {
+    margin: 0 0 22px;
+    color: var(--text-dim);
+    font-size: 0.97rem;
+    line-height: 1.55;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.auth-form label {
+    color: #bbcbec;
+    font-size: 0.9rem;
+}
+
+.auth-form input {
+    border-radius: 10px;
+    border: 1px solid rgba(125, 151, 225, 0.4);
+    background: rgba(5, 9, 18, 0.82);
+    color: #f2f7ff;
+    padding: 11px 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-form input:focus {
+    border-color: rgba(126, 160, 255, 0.85);
+    box-shadow: 0 0 0 3px rgba(85, 116, 212, 0.25);
+}
+
+.auth-form button {
+    margin-top: 6px;
+    border: 0;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f8fbff;
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    box-shadow: 0 12px 24px rgba(57, 89, 196, 0.35);
+    cursor: pointer;
+}
+
+.form-message {
+    min-height: 22px;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.form-message a {
+    color: #b7c8ff;
+}
+
+.form-message.ok {
+    color: var(--ok);
+}
+
+.form-message.error {
+    color: var(--danger);
+}
+
+.switch-line {
+    margin-top: 18px;
+    margin-bottom: 0;
+    color: var(--text-dim);
+    font-size: 0.92rem;
+}
+
+.switch-line a {
+    color: #b7c8ff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-right {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 34px;
+    background:
+        radial-gradient(circle at 80% 8%, rgba(95, 125, 255, 0.26), transparent 30%),
+        radial-gradient(circle at 20% 86%, rgba(0, 164, 255, 0.2), transparent 34%),
+        linear-gradient(160deg, #050a14 0%, #04070f 100%);
+}
+
+.visual-caption {
+    margin: 0;
+    max-width: 420px;
+    color: #d8e4ff;
+    font-size: 1.02rem;
+    line-height: 1.55;
+}
+
+.visual-scene {
+    position: relative;
+    width: 100%;
+    min-height: 430px;
+    border-radius: 18px;
+    border: 1px solid rgba(111, 139, 214, 0.22);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        radial-gradient(circle at center, rgba(12, 22, 43, 0.95), rgba(2, 4, 10, 0.95));
+    background-size: 44px 44px, 44px 44px, cover;
+}
+
+.beam {
+    position: absolute;
+    width: 86px;
+    border-radius: 44px;
+    bottom: 28px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.05));
+    box-shadow: 0 0 38px rgba(214, 232, 255, 0.13);
+}
+
+.beam-a {
+    left: 18%;
+    height: 230px;
+}
+
+.beam-b {
+    left: 43%;
+    height: 295px;
+}
+
+.beam-c {
+    left: 68%;
+    height: 200px;
+}
+
+.cube {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    transform: rotate(45deg);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(145, 162, 196, 0.88));
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+.cube-a {
+    top: 28%;
+    left: 24%;
+}
+
+.cube-b {
+    top: 52%;
+    left: 48%;
+    width: 30px;
+    height: 30px;
+}
+
+.cube-c {
+    top: 35%;
+    left: 73%;
+}
+
+.cube-d {
+    top: 72%;
+    left: 60%;
+    width: 18px;
+    height: 18px;
+}
+
+.dot {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(222, 236, 255, 0.85);
+}
+
+.dot-a {
+    top: 20%;
+    left: 38%;
+}
+
+.dot-b {
+    top: 65%;
+    left: 28%;
+}
+
+.dot-c {
+    top: 45%;
+    left: 82%;
+}
+
+@media (max-width: 960px) {
+    .auth-card {
+        grid-template-columns: 1fr;
+        min-height: unset;
+    }
+
+    .auth-left {
+        border-right: 0;
+        border-bottom: 1px solid rgba(112, 138, 220, 0.25);
+    }
+
+    .auth-right {
+        min-height: 320px;
+    }
+
+    .visual-scene {
+        min-height: 240px;
+    }
+
+    .beam-a,
+    .beam-b,
+    .beam-c {
+        height: 140px;
+    }
+}

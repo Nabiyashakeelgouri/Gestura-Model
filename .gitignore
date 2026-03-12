@@ -5,3 +5,6 @@ __pycache__/
 *.pyc
 *.db
 *.mp3
+.pytest_cache/
+pytest-cache-files-*
+.env
